@@ -1,0 +1,188 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-item {
+            flex: 1 1 calc(50% - 10px);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+            .dashboard-item:hover {
+                transform: scale(1.05) rotate(10deg);
+            }
+
+            .dashboard-item:nth-child(1) {
+                background-color: #f39c12;
+            }
+
+            .dashboard-item:nth-child(2) {
+                background-color: #3498db;
+            }
+
+            .dashboard-item:nth-child(3) {
+                background-color: #27ae60;
+            }
+
+            .dashboard-item:nth-child(4) {
+                background-color: #e74c3c;
+            }
+
+            .dashboard-item h2 {
+                margin: 0;
+                color: #fff;
+                font-size: 20px;
+            }
+
+        .input-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+            .input-container input[type="text"] {
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 16px;
+            }
+
+        .chart-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function showAlert(buttonName) {
+            helper.aButtonWasClicked(buttonName)
+        }
+
+        function getCustomerNameFromId(customerId) {
+            const customerMap = {
+                "1": "John Doe",
+                "2": "Jane Smith",
+                "3": "Michael Johnson",
+                // Add more customer IDs and names as needed
+            };
+
+            return customerMap[customerId] || "Unknown Customer";
+        }
+
+        async function showCustomerName() {
+            
+            const customerId = document.getElementById("customer-id").value;
+            const customerName =  await helper.getCustomerName(customerId);
+            document.getElementById("customer-name").textContent = "Customer Name: " + customerName;
+        }
+
+        async function selectCustomer() {
+            
+            const element = document.getElementById("customer-id");
+            element.value = await helper.selectCustomer(element.value);
+            showCustomerName()
+
+        }
+    </script>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-item" onclick="showAlert('Orders')">
+            <h2>Orders</h2>
+        </div>
+        <div class="dashboard-item" onclick="showAlert('Customers')">
+            <h2>Customers</h2>
+        </div>
+        <div class="dashboard-item" onclick="showAlert('Products')">
+            <h2>Products</h2>
+        </div>
+        <div class="dashboard-item" onclick="showAlert('Order Report')">
+            <h2>Order Report</h2>
+        </div>
+    </div>
+
+    <div class="input-container">
+        <input type="text" id="customer-id" placeholder="Enter Customer ID" onblur="showCustomerName()" ondblclick="selectCustomer()">
+        <span id="customer-name"></span>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="order-chart"></canvas>
+    </div>
+
+    <script>
+
+       
+
+        // I'm ready'
+       
+        // Chart.js code
+        window.onload = function () {
+            CefSharp.BindObjectAsync("helper").then(async () => {
+
+                const stats = await helper.getStatistics()
+            const inputField = document.getElementById("customer-id");
+            inputField.addEventListener("blur", showCustomerName);
+            const orderChart = new Chart(document.getElementById("order-chart"), {
+                type: 'bar',
+                data: {
+                    labels: stats.years,
+                    datasets: [{
+                        label: 'Number of Orders',
+                        data: stats.values,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            })
+        };
+    </script>
+</body>
+</html>
