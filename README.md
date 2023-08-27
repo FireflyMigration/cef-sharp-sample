@@ -16,4 +16,5 @@ All the files used in this video are in this repository
 * [CEFSharp](https://cefsharp.github.io/)
 * [Quick Start For MS .Net 4.x](https://github.com/cefsharp/CefSharp/wiki/Quick-Start-For-MS-.Net-4.x)
 * [POCO Param Example](https://github.com/cefsharp/CefSharp/wiki/Advanced-Async-JavaScript-Binding-(JSB)#poco-param-example)
+* [Convert C# classes to typescript interfaces](https://csharptotypescript.azurewebsites.net/)
   
